@@ -1,0 +1,67 @@
+﻿@page
+@using System.Globalization
+@model old_forum.Pages.Board
+
+@{
+    Layout = "_Layout";
+    ViewData["BoardId"] = Model.BoardId;
+}
+
+@functions {
+    static string GetActiveClass(int curPage, int page) => curPage == page ? "active" : "";
+    static string GetDisabledClass(int curPage, int limitingPage) => curPage == limitingPage || limitingPage == -1 ? "disabled" : "";
+}
+
+<div class="board">
+    <div class="topics">
+        <ul>
+            @foreach (var topic in Model.Topics)
+            {
+            <li class="board-item">
+                <div class="board-item-left">
+                    <a class="board-item-title" asp-page="/Topic" asp-route-id="@topic.Id">@topic.Title</a>
+                    <div class="board-item-tags">
+                        <a class="board-item-tag" asp-page="/User" asp-route-id="@topic.UserId">@topic.username</a>
+                    </div>
+                </div>
+                <div class="board-item-right">
+                    <div>2 replies</div>
+                    <div>@topic.Date.ToString("dd MMMM yyyy")</div>
+                </div>
+            </li>
+            }
+        </ul>        
+    </div>
+
+    <div class="paging">
+        <ul class="paging-pages">
+            <li class="paging-item">
+                <a class="paging-link @GetDisabledClass(Model.CurPage, Model.Paging.Take(1).FirstOrDefault(-1))"
+                   asp-page="/Board"
+                   asp-route-id="@Model.BoardId"
+                   asp-route-pg="@(Model.CurPage-1)">
+                    Previous
+                </a>
+            </li>
+            @foreach (var pg in Model.Paging)
+            {
+                <li class="paging-item">
+                    <a class="paging-link @GetActiveClass(Model.CurPage, pg)" 
+                       asp-page="/Board" 
+                       asp-route-id="@Model.BoardId"
+                       asp-route-pg="@pg">
+                        @pg.ToString()
+                    </a>
+                </li>
+            }
+            <li class="paging-item">
+                <a class="paging-link @GetDisabledClass(Model.CurPage, Model.Paging.TakeLast(1).FirstOrDefault(-1))"
+                   asp-page="/Board"
+                   asp-route-id="@Model.BoardId"
+                   asp-route-pg="@(Model.CurPage + 1)">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

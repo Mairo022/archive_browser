@@ -1,0 +1,42 @@
+﻿@{
+    var boardId = ViewData["BoardId"] as int? ?? -1;
+}
+
+@functions {
+    static string GetActiveClass(int boardId, int pageId) => boardId == pageId ? "active" : "";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@ViewData["Title"] - old_forum</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+</head>
+<body>
+<header>
+    <nav>
+        <div class="container">
+            <ul class="navbar-nav">
+                @foreach (Models.Board board in Model.Boards)
+                {
+                    <li class="nav-item @GetActiveClass(board.Id, boardId)">
+                        <a class="nav-link" asp-page="/Board" asp-route-id="@board.Id">@board.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

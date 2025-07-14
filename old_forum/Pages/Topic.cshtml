@@ -1,0 +1,27 @@
+﻿@page
+@model old_forum.Pages.Topic
+
+@{
+    Layout = "_Layout";
+    ViewData["BoardId"] = Model.BoardId;
+}
+
+<div class="topic">
+    <h3>@(Model.Posts.FirstOrDefault()?.Title ?? "")</h3>
+    <ul class="posts">
+        @foreach (var post in Model.Posts)
+        {
+            <li class="post">
+                <div class="post-top">
+                    <div class="post-author">
+                        <a class="post-author-link" asp-page="/User" asp-route-id="@post.UserId">@post.Username</a>
+                    </div>
+                    <div class="post-date">@post.Date.ToString("dd MMMM yyyy HH:mm")</div>
+                </div>
+                <div class="post-content">
+                    @post.Content
+                </div>
+            </li>
+        }
+    </ul>
+</div>

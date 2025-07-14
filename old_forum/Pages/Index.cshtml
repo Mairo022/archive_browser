@@ -1,0 +1,13 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    @IndexModel.Message
+    @foreach (var board in Model.Boards)
+    {
+        <p>@board.Name</p>
+    }
+</div>
