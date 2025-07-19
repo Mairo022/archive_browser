@@ -6,17 +6,19 @@
     ViewData["BoardId"] = Model.BoardId;
 }
 
+@section Styles {
+    <link rel="stylesheet" href="css/topic.css" />
+}
+
 <div class="topic">
-    <h3>@(Model.Posts.FirstOrDefault()?.Title ?? "")</h3>
+    <h3 class="topic-title">@(Model.Posts.FirstOrDefault()?.Title ?? "")</h3>
     <ul class="posts">
         @foreach (var post in Model.Posts)
         {
             <li class="post">
-                <div class="post-top">
-                    <div class="post-author">
-                        <a class="post-author-link" asp-page="/User" asp-route-id="@post.UserId">@post.Username</a>
-                    </div>
-                    <div class="post-date">@post.Date.ToString("dd MMMM yyyy HH:mm")</div>
+                <div class="post-info">
+                    <a class="post-author" asp-page="/User" asp-route-id="@post.UserId">@post.Username</a>
+                    <span class="post-date">@post.Date.ToString("dd MMMM yyyy HH:mm")</span>
                 </div>
                 <div class="post-content">
                     @post.Content

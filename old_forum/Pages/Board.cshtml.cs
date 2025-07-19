@@ -11,9 +11,14 @@ public class Board : PageModel
     public IEnumerable<TopicWithUserTotal> Topics { get; private set; } = [];
     public IEnumerable<Models.Board> Boards = [];
 
-    const int PageSize = 60;
+    const int PageSize = 30;
     public int CurPage { get; set; }
     public int BoardId { get; set; }
+
+    public string? Author;
+    public string? Poster;
+    public string? Topic;
+    public string? Start;
 
     public List<int> Paging { get; set; } = [];
     
@@ -23,22 +28,31 @@ public class Board : PageModel
         _bRepo = bRepo;
     }
     
-    public async Task OnGetAsync(int id, int pg = 1)
+    public async Task OnGetAsync(int id, int pg, string? start, string? author, string? poster, string? topic)
     {
+        if (pg == 0) pg = 1;
+        
         BoardId = id;
         CurPage = pg;
         
+        Start = start;
+        Author = author;
+        Poster = poster;
+        Topic = topic;
+        
         var offset = (pg-1) * PageSize;
         
-        Topics = await _tRepo.Get(BoardId, offset, PageSize);
+        Topics = await _tRepo.Get(BoardId, offset, PageSize, start, author, poster, topic);
         Boards = await _bRepo.GetAll();
         
         Paging = CreatePaging(pg, PageSize, Topics.FirstOrDefault()?.totalRows ?? 0);
     }
+    
+    
 
     static List<int> CreatePaging(int page, int pageSize, int total)
     {
-        const int pagesToSide = 2;
+        const int pagesToSide = 3;
         var paging = new List<int>(pagesToSide * 2 + 1 + 2);
         
         if (total == 0) return paging;
