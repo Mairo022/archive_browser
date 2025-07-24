@@ -3,6 +3,7 @@
 @model old_forum.Pages.Board
 
 @{
+    ViewData["Title"] = Model.BoardName;
     Layout = "_Layout";
     ViewData["BoardId"] = Model.BoardId;
 }
@@ -15,6 +16,10 @@
 <div class="board">
     <div class="search">
         <form method="get" class="search-form" asp-route-id="5">
+            <input type="radio" id="asc" value="ASC" name="order" checked/>
+            <label for="asc">↑</label>
+            <input type="radio" id="desc" value="DESC" name="order" @(Model.Order == Order.DESC ? "checked" : "")/>
+            <label for="desc">↓</label>
             <input type="date" id="start" name="start"/>
             <input type="text" id="author" name="author" placeholder="Author"/>
             <input type="text" id="poster" name="poster" placeholder="Poster"/>
@@ -59,10 +64,10 @@
                    asp-route-id="@Model.BoardId"
                    asp-route-pg="@(Model.CurPage - 1)"
                    asp-route-topic="@Model.Topic"
+                   asp-route-order="@Model.Order"
                    asp-route-author="@Model.Author"
                    asp-route-poster="@Model.Poster"
                    asp-route-start="@Model.Start">
-                   >
                     Previous
                 </a>
             </li>
@@ -74,6 +79,7 @@
                        asp-route-id="@Model.BoardId"
                        asp-route-pg="@pg"
                        asp-route-topic="@Model.Topic"
+                       asp-route-order="@Model.Order"
                        asp-route-author="@Model.Author"
                        asp-route-poster="@Model.Poster"
                        asp-route-start="@Model.Start">
@@ -87,6 +93,7 @@
                    asp-route-id="@Model.BoardId"
                    asp-route-pg="@(Model.CurPage + 1)"
                    asp-route-topic="@Model.Topic"
+                   asp-route-order="@Model.Order"
                    asp-route-author="@Model.Author"
                    asp-route-poster="@Model.Poster"
                    asp-route-start="@Model.Start">

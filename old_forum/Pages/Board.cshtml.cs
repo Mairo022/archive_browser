@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using old_forum.Models;
 using old_forum.Repos;
+using static old_forum.Utils.StringUtils;
 
 namespace old_forum.Pages;
 
@@ -8,17 +9,19 @@ public class Board : PageModel
 {
     readonly TopicRepository _tRepo;
     readonly BoardRepository _bRepo;
-    public IEnumerable<TopicWithUserTotal> Topics { get; private set; } = [];
+    public IEnumerable<TopicWithUserTotal> Topics { get; set; } = [];
     public IEnumerable<Models.Board> Boards = [];
 
     const int PageSize = 30;
     public int CurPage { get; set; }
     public int BoardId { get; set; }
+    public string? BoardName { get; set; }
 
     public string? Author;
     public string? Poster;
     public string? Topic;
     public string? Start;
+    public Order Order;
 
     public List<int> Paging { get; set; } = [];
     
@@ -28,7 +31,7 @@ public class Board : PageModel
         _bRepo = bRepo;
     }
     
-    public async Task OnGetAsync(int id, int pg, string? start, string? author, string? poster, string? topic)
+    public async Task OnGetAsync(int id, int pg, string? start, string? author, string? poster, string? topic, Order order)
     {
         if (pg == 0) pg = 1;
         
@@ -39,16 +42,22 @@ public class Board : PageModel
         Author = author;
         Poster = poster;
         Topic = topic;
+        Order = order;
         
         var offset = (pg-1) * PageSize;
+
+        Topics = string.IsNullOrEmpty(poster)
+            ? await _tRepo.Get(BoardId, offset, PageSize, start, author, topic, order)
+            : await _tRepo.GetByPoster(BoardId, offset, PageSize, start, author, topic, order, poster);
         
-        Topics = await _tRepo.Get(BoardId, offset, PageSize, start, author, poster, topic);
         Boards = await _bRepo.GetAll();
+        BoardName = FirstCharToUpper(Boards
+            .Where(board => board.Id == BoardId)
+            .Select(board => board.Name)
+            .FirstOrDefault() ?? "Board");
         
         Paging = CreatePaging(pg, PageSize, Topics.FirstOrDefault()?.totalRows ?? 0);
     }
-    
-    
 
     static List<int> CreatePaging(int page, int pageSize, int total)
     {
@@ -72,4 +81,10 @@ public class Board : PageModel
         paging.Add(totalPages);
         return paging;
     }
+}
+
+public enum Order
+{
+    DESC,
+    ASC
 }

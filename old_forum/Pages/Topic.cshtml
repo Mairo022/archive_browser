@@ -2,6 +2,7 @@
 @model old_forum.Pages.Topic
 
 @{
+    ViewData["Title"] = Model.Posts.FirstOrDefault()?.Title ?? "Topic Not Found";
     Layout = "_Layout";
     ViewData["BoardId"] = Model.BoardId;
 }

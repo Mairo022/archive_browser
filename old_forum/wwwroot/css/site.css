@@ -35,6 +35,11 @@ a {
   }
 }
 
+input[type=radio],
+input[type=radio] + label {
+  cursor: pointer;
+}
+
 input {
   text-align: center;
   outline: none;
@@ -133,7 +138,9 @@ ul {
 
 .search-form {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   gap: .5rem;
 }
 
