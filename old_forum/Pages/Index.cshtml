@@ -1,13 +1,71 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    @IndexModel.Message
-    @foreach (var board in Model.Boards)
-    {
-        <p>@board.Name</p>
-    }
+<div class="board">
+    <div class="posts">
+        <div class="board-headers">
+            <span class="board-header board-col-1">Thread/Poster (Favourites)</span>
+            <span class="board-header board-col-2">Delete</span>
+        </div>
+        <ul>
+            @{int i = 0;}
+            @foreach (var topic in Model.SavedPosts)
+            {
+                <li class="board-item @(i % 2 == 0 ? "darker" : "")" id="post_@topic.Id">
+                    <div class="board-col-1">
+                        <a class="board-item-title" 
+                           asp-page="/Topic" 
+                           asp-route-id="@topic.TopicId"
+                           asp-route-boardId="@topic.BoardId"
+                           asp-fragment="post_@topic.PostId">
+                            @topic.Title
+                        </a>
+                        <div class="board-item-info">
+                            <a class="board-item-author" asp-page="/User" asp-route-id="@topic.UserId">@topic.username,</a>
+                            <span class="board-item-date">@topic.Date.ToString("dd MMMM yyyy HH:mm")</span>
+                        </div>
+                    </div>
+                    <div class="board-col-2">
+                        <button type="button" onclick="onDeleteClick(@topic.Id)">X</button>
+                    </div>
+                </li>
+                i++;
+            }
+        </ul>
+    </div>
+    @Html.AntiForgeryToken()
 </div>
+
+<script defer>
+    document.querySelector("#nav_home")?.classList.add("active")
+
+    function onDeleteClick(savedPostId) {
+        const token = document.querySelector('[name="__RequestVerificationToken"]')?.value
+
+        if (!token) {
+            console.log("Token not found")
+            return
+        }
+
+        fetch("/?handler=DeletePost", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'RequestVerificationToken': token
+            },
+            body: new URLSearchParams({
+                SavedPostId: savedPostId
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    document.querySelector(`#post_${savedPostId}`)?.remove()
+                }
+            }).catch(err => {
+                console.log(err)
+        })
+    }
+</script>

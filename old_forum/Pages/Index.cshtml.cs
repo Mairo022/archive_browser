@@ -1,23 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using old_forum.Db;
 using old_forum.Models;
 using old_forum.Repos;
 
 namespace old_forum.Pages;
 
-public class IndexModel : PageModel
+public class IndexModel(BoardRepository repo, SavedPostsRepository spRepo) : PageModel
 {
-    readonly ILogger<IndexModel> _logger;
-    readonly BoardRepository _repo;
     public IEnumerable<Models.Board> Boards = [];
 
-    public static string Message { get; set; } = "CARS ARE FAST";
-    
-    public IndexModel(ILogger<IndexModel> logger, BoardRepository repo) => _repo = repo;
+    public IEnumerable<SavedPostWithDetails> SavedPosts { get; set; } = [];
 
+    [BindProperty]
+    public int SavedPostId { get; set; }
+    
     public async Task OnGetAsync()
     {
-        Boards = await _repo.GetAll();
+        Boards = await repo.GetAll();
+        SavedPosts = await spRepo.GetAllWithDetails();
+    }
+    
+    public async Task<IActionResult> OnPostDeletePost()
+    {
+        return await spRepo.DeleteOne(SavedPostId) ? StatusCode(201) : StatusCode(400);
     }
 }

@@ -76,3 +76,30 @@
     line-height: 1.5;
     border-radius: 2px;
 }
+
+.post-save {
+    position: absolute;
+    bottom: calc(var(--padding-vertical-post-end) / 2);
+    left: auto;
+    right: 9999px;
+    border: 1px solid #bbb;
+    border-radius: 2px;
+    padding: 6px 10px;
+    opacity: 0.1;
+    transition: opacity 200ms ease-in-out;
+
+    &:hover {
+        background-color: hsl(180, 2%, 88%);
+    }
+
+    &:active {
+        border: 1px solid #555;
+        box-shadow: 0 0 4px #ddd;
+    }
+}
+
+.post-save:focus,
+.post:hover .post-save {
+    right: var(--padding-horizontal);
+    opacity: 1;
+}

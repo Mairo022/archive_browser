@@ -1,5 +1,3 @@
-using System.Data;
-using Npgsql;
 using old_forum.Db;
 using old_forum.Repos;
 
@@ -15,6 +13,7 @@ builder.Services.AddScoped<BoardRepository>();
 builder.Services.AddScoped<TopicRepository>();
 builder.Services.AddScoped<PostRepository>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<SavedPostsRepository>();
 
 var app = builder.Build();
 
