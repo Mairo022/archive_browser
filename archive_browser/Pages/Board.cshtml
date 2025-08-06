@@ -20,10 +20,10 @@
             <label for="asc">↑</label>
             <input type="radio" id="desc" value="DESC" name="order" @(Model.Order == Order.DESC ? "checked" : "")/>
             <label for="desc">↓</label>
-            <input type="date" id="start" name="start"/>
-            <input type="text" id="author" name="author" placeholder="Author"/>
-            <input type="text" id="poster" name="poster" placeholder="Poster"/>
-            <input type="text" id="topic" name="topic" placeholder="Topic"/>
+            <input type="date" id="start" name="start" value="@Model.Start"/>
+            <input type="text" id="author" name="author" placeholder="Author" value="@Model.Author"/>
+            <input type="text" id="poster" name="poster" placeholder="Poster" value="@Model.Poster"/>
+            <input type="text" id="topic" name="topic" placeholder="Topic" value="@Model.Topic"/>
             <input type="hidden" name="id" value="@Model.BoardId"/>
             <button type="submit" value="Submit">Search</button>
         </form>
