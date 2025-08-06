@@ -11,7 +11,7 @@ public class PostRepository(IDbConnectionFactory connectionFactory)
         using var dbConnection = await connectionFactory.CreateConnectionAsync();
         return await dbConnection.QueryAsync<Post>(
             $"""
-             SELECT p.id, p.user_id, u.username, p.title, p.date, p.content
+             SELECT p.id, p.user_id as UserId, u.username, p.title, p.date, p.content
              FROM posts p
              INNER JOIN users u ON p.user_id = u.id
              WHERE topic_id={topicId} 

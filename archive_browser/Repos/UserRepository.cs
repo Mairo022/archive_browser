@@ -17,4 +17,20 @@ public class UserRepository(IDbConnectionFactory connectionFactory)
         using var dbConnection = await connectionFactory.CreateConnectionAsync();
         return await dbConnection.QueryAsync<User>("SELECT * FROM users WHERE user_id=@id");
     }
+
+    public async Task<UserInfo?> GetUserInfo(int id)
+    {
+        using var dbConnection = await connectionFactory.CreateConnectionAsync();
+        
+        var data =  await dbConnection.QueryAsync<UserInfo>(
+            $"""
+             SELECT u.id, u.username, COUNT(*) AS TotalPosts, MAX(p.date) AS LastPostTime
+             FROM users u
+             LEFT JOIN posts p ON p.user_id = u.id
+             WHERE u.id={id}
+             GROUP BY u.id
+             """);
+        
+        return data.FirstOrDefault();
+    }
 }

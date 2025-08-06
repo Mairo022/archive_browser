@@ -1,0 +1,18 @@
+﻿@page
+@model archive_browser.Pages.User
+
+@{
+    Layout = Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="css/user.css" />
+}
+
+<div class="user">
+    <div class="username">@Model.UserInfo?.Username</div>
+    <div class="info">
+        <div class="">Total posts: @Model.UserInfo?.TotalPosts</div>
+        <div class="">Last post: @Model.UserInfo?.LastPostTime.DateTime.ToString("dd MMMM yyyy HH:mm")</div>
+    </div>
+</div>

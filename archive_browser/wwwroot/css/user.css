@@ -1,0 +1,28 @@
+﻿:root {
+    --padding-horizontal: 24px;
+    --padding-vertical: 16px;
+    --padding-vertical-post-end: 48px;
+}
+
+.user {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.username {
+    background-color: #323232;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom: none;
+    font-size: 1.05rem;
+    color: #fdfdfd;
+    padding: 8px var(--padding-horizontal);
+    margin: 0;
+}
+
+.info {
+    padding: 8px var(--padding-horizontal);
+    border: 1px solid #bbb;
+    border-top: none;
+    border-bottom: 1px solid #a6a6a6;
+}
